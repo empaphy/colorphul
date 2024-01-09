@@ -1,0 +1,40 @@
+# Whether the theme is lighter or darker.
+details: darker
+
+# Accent color for UI elements
+accent: '#2e69ff'
+
+# Terminal background color
+background: '#000000'
+
+# The foreground color.
+foreground: '#aaaaaa'
+
+# ANSI escape colors.
+terminal_colors:
+
+  normal: # avg l: 52.75 -> 57.22
+    black:   '#000000'
+    red:     '#d53e31' # l: 46.3 -> 58.9
+    green:   '#008900' # l: 63.9 -> 54.6
+    yellow:  '#b45f15' # l: 54.3 -> 57.5
+    blue:    '#2e69ff' # l: 33.4 -> 57.6
+    magenta: '#c431c3' # l: 51.8 -> 59.5
+    cyan:    '#008383' # l: 66.8 -> 55.2
+#    red:     '#b3140d' # l: 46.3 -> 48.8
+#    green:   '#006900' # l: 63.9 -> 45.1
+#    yellow:  '#8e4600' # l: 54.3 -> 47.5
+#    blue:    '#1449dd' # l: 33.4 -> 48.2
+#    magenta: '#a000a0' # l: 51.8 -> 49.5
+#    cyan:    '#006464' # l: 66.8 -> 45.6
+    white:   '#aaaaaa'
+
+  bright: # avg l: 79.1 -> 73.97
+    black:   '#595959' # l: 44.9 -> 46.4
+    red:     '#ff8780' # l: 68.2 -> 75.5
+    green:   '#00c517' # l: 88.0 -> 71.4
+    yellow:  '#b1b000' # l: 97.1 -> 73.4
+    blue:    '#94a4ff' # l: 56.0 -> 74.4
+    magenta: '#ff70fe' # l: 74.0 -> 76.7
+    cyan:    '#00bdbe' # l: 91.5 -> 72.4
+    white:   '#ffffff'

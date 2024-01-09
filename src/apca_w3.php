@@ -324,12 +324,12 @@ function reverseAPCA(
         $knownExp   = $contrast > 0 ? SA98G::normBG  : SA98G::revBG;
         $unknownExp = $contrast > 0 ? SA98G::normTXT : SA98G::revTXT;
         $unknownY   = pow(pow($knownY, $knownExp) - $contrast, 1 / $unknownExp);
-        if (INF === $unknownY) return false;
+        if (is_nan($unknownY)) return false;
     } else if ($knownType === 'txt' || $knownType === 'text') {
         $knownExp   = $contrast > 0 ? SA98G::normTXT : SA98G::revTXT;
         $unknownExp = $contrast > 0 ? SA98G::normBG : SA98G::revBG;
         $unknownY   = pow($contrast + pow($knownY, $knownExp), 1 / $unknownExp);
-        if (INF === $unknownY) return false;
+        if (is_nan($unknownY)) return false;
     } else { return false; } // return false on error
 
     if ($unknownY > 1.06 || $unknownY < 0) {

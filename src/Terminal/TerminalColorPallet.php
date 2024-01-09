@@ -22,7 +22,7 @@ readonly class TerminalColorPallet
         // Nothing to do.
     }
 
-    protected static function calculateAverageRgbToOkLchHueOffset(float $lightness): float
+    protected function calculateAverageRgbToOkLchHueOffset(float $lightness): float
     {
         $red   = new Hsl(0,   100, $lightness);
         $green = new Hsl(120, 100, $lightness);

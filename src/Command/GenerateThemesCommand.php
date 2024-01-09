@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Empaphy\Colorphul\Command;
 
-use Empaphy\Colorphul\Schemes\ColorphulScheme;
+use Empaphy\Colorphul\Schemes\DarkColorphulScheme;
+use Empaphy\Colorphul\Schemes\LightColorphulScheme;
 use Empaphy\Colorphul\Themes\Warp\WarpThemeGenerator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -22,8 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GenerateThemesCommand extends Command
 {
     public function __construct(
-        private readonly WarpThemeGenerator $warpThemeGenerator,
-        private readonly ColorphulScheme    $colorphulScheme,
+        private readonly WarpThemeGenerator   $warpThemeGenerator,
+        private readonly DarkColorphulScheme  $darkColorphulScheme,
+        private readonly LightColorphulScheme $lightColorphulScheme,
         string $name = null
     ) {
         parent::__construct($name);
@@ -43,7 +45,8 @@ class GenerateThemesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->warpThemeGenerator->generate($this->colorphulScheme, dirname(__DIR__, 2) . '/themes/warp/colorphul_apca.yaml');
+        $this->warpThemeGenerator->generate($this->darkColorphulScheme, dirname(__DIR__, 2) . '/themes/warp/colorphul_dark.yaml');
+        $this->warpThemeGenerator->generate($this->lightColorphulScheme, dirname(__DIR__, 2) . '/themes/warp/colorphul_light.yaml');
 
         // this method must return an integer number with the "exit status code"
         // of the command. You can also use these constants to make code more readable
