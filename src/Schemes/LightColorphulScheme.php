@@ -6,7 +6,7 @@ namespace Empaphy\Colorphul\Schemes;
 
 use Empaphy\Colorphul\ColorSchemeAppearance;
 
-readonly class LightColorphulScheme extends ColorphulScheme
+class LightColorphulScheme extends ColorphulScheme
 {
     public function __construct()
     {

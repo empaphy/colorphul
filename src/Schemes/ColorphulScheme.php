@@ -4,19 +4,21 @@ declare(strict_types=1);
 
 namespace Empaphy\Colorphul\Schemes;
 
+use Empaphy\Colorphul\Apca;
 use Empaphy\Colorphul\ColorSchemeAppearance;
-use Empaphy\Colorphul\StandardColorWheel;
-use Empaphy\Colorphul\Terminal\IntensityAwareColorPallet;
-use Empaphy\Colorphul\Terminal\TerminalColorPallet;
-use Empaphy\Colorphul\Terminal\TerminalEmulatorColorPallet;
+use Empaphy\Colorphul\ColorWheel\StandardColorWheel;
+use Empaphy\Colorphul\Terminal\AnsiColorPalette;
+use Empaphy\Colorphul\Terminal\IntensityAwareColorScheme;
+use Empaphy\Colorphul\Terminal\TerminalEmulatorColorScheme;
 use matthieumastadenis\couleur\ColorInterface;
+use matthieumastadenis\couleur\colors\Hsl;
 use matthieumastadenis\couleur\colors\OkLch;
 use matthieumastadenis\couleur\colors\Rgb;
-use Empaphy\Colorphul\apca_w3;
+use RuntimeException;
 
-readonly class ColorphulScheme extends TerminalEmulatorColorPallet
+class ColorphulScheme extends TerminalEmulatorColorScheme
 {
-    private const CHROMA = 0.13;
+    private const CHROMA = 0.11;
 
     private const RGB_RANGE_MIN =  16;
     private const RGB_RANGE_MAX = 234;
@@ -29,37 +31,45 @@ readonly class ColorphulScheme extends TerminalEmulatorColorPallet
         // instead of 15 - 235? Because I want to prevent the screen hitting 0 lightness, to prevent Full-Array Local
         // Dimming (FALD) displays from trying to achieve full black, which would reduce the contrast ratio of text.
 
-        $white3 = new Rgb(255, 255, 255);                                                   #FFFFFF
         $black3 = new Rgb(0, 0, 0);                                                         #000000
-        $white2 = (new Rgb(self::RGB_RANGE_MAX, self::RGB_RANGE_MAX, self::RGB_RANGE_MAX)); #EAEAEA
+        $white3 = new Rgb(255, 255, 255);                                                   #FFFFFF
         $black2 = (new Rgb(self::RGB_RANGE_MIN, self::RGB_RANGE_MIN, self::RGB_RANGE_MIN)); #101010
-        $white1 = apca_w3\reverseAPCA(-75, apca_w3\sRGBtoY($black2), 'bg', 'color');        #CCCCCC
-        $white0 = apca_w3\reverseAPCA( 30, apca_w3\sRGBtoY($white2), 'bg', 'color');        #B0B0B0
-        $black1 = apca_w3\reverseAPCA( 75, apca_w3\sRGBtoY($white2), 'bg', 'color');        #515151
-        $black0 = apca_w3\reverseAPCA(-30, apca_w3\sRGBtoY($black2), 'bg', 'color');        #777777
+        $white2 = (new Rgb(self::RGB_RANGE_MAX, self::RGB_RANGE_MAX, self::RGB_RANGE_MAX)); #EAEAEA
 
-//        $mid = $this->findOptimalLightness(new OkLch(50, 0.13, 25 + self::HUE_SPRING), $black2, $white2);
+        $gray   = self::findOptimalBgLightness(new OkLch(50, 0, 0), $black2, $white2);      #959595 (67 lightness)
+
+        // Produces grays that have a specific contrast compared to a background color.
+        $black1 = Apca::reverseAPCA( 75, Apca::sRGBtoY($white2), 'bg', 'color');        #515151
+        $white1 = Apca::reverseAPCA(-75, Apca::sRGBtoY($black2), 'bg', 'color');        #CCCCCC
+//        $white0 = Apca::reverseAPCA( 30, Apca::sRGBtoY($white2), 'bg', 'color');        #B0B0B0
+//        $black0 = Apca::reverseAPCA(-30, Apca::sRGBtoY($black2), 'bg', 'color');        #777777
+
+        if (false === $black1 || false === $white1) {
+            throw new RuntimeException('Failed to calculate optimal text colors.');
+        }
+
+//        $mid = self::findOptimalTextLightness(new OkLch(50, 0.13, 25 + self::HUE_SPRING), $black2, $white2);
 //        $gray = new OkLch($midLightness, 0, 0);
 //        $midLightness = $gray->lightness;
 
-        $gray       = $this->findOptimalLightness(new OkLch(50, 0, 0), $black2, $white2);
+        # 27.638934402372
         $hueOffset  = $this->calculateAverageRgbToOkLchHueOffset($gray->lightness);
         $colorWheel = new StandardColorWheel($gray->lightness, self::CHROMA, $hueOffset);
 
         parent::__construct(
-            colors: new IntensityAwareColorPallet(
-                normal: new TerminalColorPallet(
+            colorSets: new IntensityAwareColorScheme(
+                normal: new AnsiColorPalette(
                     black:   $black3,
-                    red:     $colorWheel->red,
-                    green:   $colorWheel->green,
-                    yellow:  $colorWheel->yellow,
+                    red:     $colorWheel->red,    #db7268 oklab(67% 0.11 0.06)
+                    green:   $colorWheel->green,  # oklab(67% -0.1 0.08)
+                    yellow:  $colorWheel->yellow, #
                     blue:    $colorWheel->azure,  // Azure simply looks nicer.
                     magenta: $colorWheel->violet, // Violet harmonizes better with azure.
                     cyan:    $colorWheel->cyan,
-                    white:   $white0,
+                    white:   $white1,
                 ),
-                bright: new TerminalColorPallet(
-                    black:   $black0,
+                bright: new AnsiColorPalette(
+                    black:   $black1,
                     red:     $colorWheel->rose,
                     green:   $colorWheel->chartreuse,
                     yellow:  $colorWheel->orange,
@@ -69,37 +79,89 @@ readonly class ColorphulScheme extends TerminalEmulatorColorPallet
                     white:   $white3,
                 ),
             ),
-            accent:     $gray,
             background: ColorSchemeAppearance::Dark === $appearance ? $black2 : $white2,
             foreground: ColorSchemeAppearance::Dark === $appearance ? $white1 : $black1,
             appearance: $appearance,
+            accent:     $gray,
         );
     }
 
     /**
-     * Find the lightness for a gray that is equally readable on both the background and foreground, according to APCA.
+     * Find the optimal lightness for a text color that is equally readable on both the darker and brighter backgrounds.
      */
-    protected function findOptimalLightness(ColorInterface $color, ColorInterface $black, ColorInterface $white): OkLch
-    {
-        $color = $color->toOkLch();
+    public static function findOptimalTextLightness(
+        ColorInterface $textColor,
+        ColorInterface $darkerBgColor,
+        ColorInterface $brighterBgColor
+    ): OkLch {
+        $textColor = $textColor->toOkLch();
 
         // Define an initial lightness that is halfway between black and white.
-        $lightness = $black->toOkLch()->lightness + ($white->toOkLch()->lightness - $black->toOkLch()->lightness) / 2;
+        $lightness = $darkerBgColor->toOkLch()->lightness + (
+            $brighterBgColor->toOkLch()->lightness - $darkerBgColor->toOkLch()->lightness
+        ) / 2;
 
         $i = 0;
 
         // Approximate the optimal lightness.
         do {
-            $color = $color->change($lightness);
+            $textColor = $textColor->change($lightness);
 
-            $grayOnBlackLc = apca_w3\calcAPCA($color, $black);
-            $grayOnWhiteLc = apca_w3\calcAPCA($color, $white);
+            $onBlackLc = Apca::calcAPCA($textColor, $darkerBgColor);
+            $onWhiteLc = Apca::calcAPCA($textColor, $brighterBgColor);
 
-            $diff = round($grayOnWhiteLc + $grayOnBlackLc, 14);
+            $diff = round($onWhiteLc + $onBlackLc, 14);
 
             $lightness += $diff / 2;
         } while ($diff !== 0.0 && $i++ < 100);
 
-        return $color;
+        return $textColor;
+    }
+
+    /**
+     * Find the lightness for a background color that makes both the brighter and darker text equally readable.
+     */
+    public static function findOptimalBgLightness(
+        ColorInterface $bgColor,
+        ColorInterface $darkerTextColor,
+        ColorInterface $brighterTextColor
+    ): OkLch {
+        $bgColor = $bgColor->toOkLch();
+
+        // Define an initial lightness that is halfway between dark and bright.
+        $lightness = $darkerTextColor->toOkLch()->lightness + (
+            $brighterTextColor->toOkLch()->lightness - $darkerTextColor->toOkLch()->lightness
+        ) / 2;
+
+        $i = 0;
+
+        // Approximate the optimal lightness.
+        do {
+            $bgColor = $bgColor->change($lightness);
+
+            $onBrighterBgLc = Apca::calcAPCA($darkerTextColor, $bgColor);
+            $onDarkerBgLc = Apca::calcAPCA($brighterTextColor, $bgColor);
+
+            $diff = round($onBrighterBgLc + $onDarkerBgLc, 14);
+
+            $lightness -= $diff / 2;
+        } while ($diff !== 0.0 && $i++ < 100);
+
+        return $bgColor;
+    }
+
+    protected function calculateAverageRgbToOkLchHueOffset(float $lightness): float
+    {
+        $red   = new Hsl(0,   100, $lightness);
+        $green = new Hsl(120, 100, $lightness);
+        $blue  = new Hsl(240, 100, $lightness);
+
+        $hueOffsets = [
+            $red->toOkLch()->hue - $red->hue,
+            $green->toOkLch()->hue - $green->hue,
+            $blue->toOkLch()->hue - $blue->hue,
+        ];
+
+        return array_sum($hueOffsets) / count($hueOffsets);
     }
 }

@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Empaphy\Colorphul\Command;
 
+use Empaphy\Colorphul\Schemes\CgaScheme;
 use Empaphy\Colorphul\Schemes\DarkColorphulScheme;
 use Empaphy\Colorphul\Schemes\LightColorphulScheme;
+use Empaphy\Colorphul\Themes\Example\ExampleThemeGenerator;
 use Empaphy\Colorphul\Themes\Warp\WarpThemeGenerator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -23,9 +26,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class GenerateThemesCommand extends Command
 {
     public function __construct(
-        private readonly WarpThemeGenerator   $warpThemeGenerator,
-        private readonly DarkColorphulScheme  $darkColorphulScheme,
-        private readonly LightColorphulScheme $lightColorphulScheme,
+        private readonly WarpThemeGenerator    $warpThemeGenerator,
+        private readonly ExampleThemeGenerator $exampleThemeGenerator,
+        private readonly DarkColorphulScheme   $darkColorphulScheme,
+        private readonly LightColorphulScheme  $lightColorphulScheme,
+        private readonly CgaScheme             $cgaScheme,
         string $name = null
     ) {
         parent::__construct($name);
@@ -37,16 +42,21 @@ class GenerateThemesCommand extends Command
      * This method is not abstract because you can use this class as a concrete class. In this case, instead of defining
      * the execute() method, you set the code to execute by passing a Closure to the {@see setCode()} method.
      *
-     * @param  \Symfony\Component\Console\Input\InputInterface    $input
-     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
+     * @param  InputInterface   $input
+     * @param  OutputInterface  $output
      * @return int `0` if everything went fine, or an exit code.
      *
-     * @throws \Symfony\Component\Console\Exception\LogicException When this abstract method is not implemented.
+     * @throws LogicException When this abstract method is not implemented.
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->warpThemeGenerator->generate($this->darkColorphulScheme, dirname(__DIR__, 2) . '/themes/warp/colorphul_dark.yaml');
-        $this->warpThemeGenerator->generate($this->lightColorphulScheme, dirname(__DIR__, 2) . '/themes/warp/colorphul_light.yaml');
+        $this->exampleThemeGenerator->generate('CGA',             $this->cgaScheme,            dirname(__DIR__, 2) . '/themes/example/cga.html');
+        $this->exampleThemeGenerator->generate('Colorphul Dark',  $this->darkColorphulScheme,  dirname(__DIR__, 2) . '/themes/example/colorphul_dark.html');
+        $this->exampleThemeGenerator->generate('Colorphul Light', $this->lightColorphulScheme, dirname(__DIR__, 2) . '/themes/example/colorphul_light.html');
+
+        $this->warpThemeGenerator->generate('CGA',             $this->cgaScheme,            dirname(__DIR__, 2) . '/themes/warp/cga.yaml');
+        $this->warpThemeGenerator->generate('Colorphul Dark',  $this->darkColorphulScheme,  dirname(__DIR__, 2) . '/themes/warp/colorphul_dark.yaml');
+        $this->warpThemeGenerator->generate('Colorphul Light', $this->lightColorphulScheme, dirname(__DIR__, 2) . '/themes/warp/colorphul_light.yaml');
 
         // this method must return an integer number with the "exit status code"
         // of the command. You can also use these constants to make code more readable

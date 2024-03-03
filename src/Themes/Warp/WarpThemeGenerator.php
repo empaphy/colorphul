@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Empaphy\Colorphul\Themes\Warp;
 
 use Empaphy\Colorphul\ColorSchemeAppearance;
-use Empaphy\Colorphul\Terminal\TerminalEmulatorColorPallet;
+use Empaphy\Colorphul\Terminal\TerminalEmulatorColorScheme;
 use Empaphy\Colorphul\ThemeGeneratorInterface;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Yaml;
@@ -40,43 +40,46 @@ use Symfony\Component\Yaml\Yaml;
  *     },
  * }
  */
-readonly class WarpThemeGenerator implements ThemeGeneratorInterface
+class WarpThemeGenerator implements ThemeGeneratorInterface
 {
     public function __construct(private readonly Dumper $yamlDumper)
     {
         // Nothing to see here.
     }
 
-    public function generate(TerminalEmulatorColorPallet $scheme, string $filePath): void
+    public function generate(string $name, TerminalEmulatorColorScheme $scheme, string $filePath): void
     {
         $theme = [
             'details'    => $scheme->appearance === ColorSchemeAppearance::Dark ? 'darker' : 'lighter',
-            'accent'     => (string) $scheme->accent->toHexRgb(),
             'background' => (string) $scheme->background->toHexRgb(),
             'foreground' => (string) $scheme->foreground->toHexRgb(),
             'terminal_colors' => [
                 'normal' => [
-                    'black'   => (string) $scheme->colors->normal->black->toHexRgb(),
-                    'red'     => (string) $scheme->colors->normal->red->toHexRgb(),
-                    'green'   => (string) $scheme->colors->normal->green->toHexRgb(),
-                    'yellow'  => (string) $scheme->colors->normal->yellow->toHexRgb(),
-                    'blue'    => (string) $scheme->colors->normal->blue->toHexRgb(),
-                    'magenta' => (string) $scheme->colors->normal->magenta->toHexRgb(),
-                    'cyan'    => (string) $scheme->colors->normal->cyan->toHexRgb(),
-                    'white'   => (string) $scheme->colors->normal->white->toHexRgb(),
+                    'black'   => (string) $scheme->colorSets->normal->black->toHexRgb(),
+                    'red'     => (string) $scheme->colorSets->normal->red->toHexRgb(),
+                    'green'   => (string) $scheme->colorSets->normal->green->toHexRgb(),
+                    'yellow'  => (string) $scheme->colorSets->normal->yellow->toHexRgb(),
+                    'blue'    => (string) $scheme->colorSets->normal->blue->toHexRgb(),
+                    'magenta' => (string) $scheme->colorSets->normal->magenta->toHexRgb(),
+                    'cyan'    => (string) $scheme->colorSets->normal->cyan->toHexRgb(),
+                    'white'   => (string) $scheme->colorSets->normal->white->toHexRgb(),
                 ],
                 'bright' => [
-                    'black'   => (string) $scheme->colors->bright->black->toHexRgb(),
-                    'red'     => (string) $scheme->colors->bright->red->toHexRgb(),
-                    'green'   => (string) $scheme->colors->bright->green->toHexRgb(),
-                    'yellow'  => (string) $scheme->colors->bright->yellow->toHexRgb(),
-                    'blue'    => (string) $scheme->colors->bright->blue->toHexRgb(),
-                    'magenta' => (string) $scheme->colors->bright->magenta->toHexRgb(),
-                    'cyan'    => (string) $scheme->colors->bright->cyan->toHexRgb(),
-                    'white'   => (string) $scheme->colors->bright->white->toHexRgb(),
+                    'black'   => (string) $scheme->colorSets->bright->black->toHexRgb(),
+                    'red'     => (string) $scheme->colorSets->bright->red->toHexRgb(),
+                    'green'   => (string) $scheme->colorSets->bright->green->toHexRgb(),
+                    'yellow'  => (string) $scheme->colorSets->bright->yellow->toHexRgb(),
+                    'blue'    => (string) $scheme->colorSets->bright->blue->toHexRgb(),
+                    'magenta' => (string) $scheme->colorSets->bright->magenta->toHexRgb(),
+                    'cyan'    => (string) $scheme->colorSets->bright->cyan->toHexRgb(),
+                    'white'   => (string) $scheme->colorSets->bright->white->toHexRgb(),
                 ],
             ],
         ];
+
+        if ($scheme->accent !== null) {
+            $theme['accent'] = (string) $scheme->accent->toHexRgb();
+        }
 
         $yaml = $this->yamlDumper->dump($theme, 4);
 

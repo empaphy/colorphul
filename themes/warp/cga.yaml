@@ -1,0 +1,22 @@
+details: darker
+background: '#000'
+foreground: '#AAA'
+terminal_colors:
+    normal:
+        black: '#000'
+        red: '#A00'
+        green: '#0A0'
+        yellow: '#A50'
+        blue: '#00A'
+        magenta: '#A0A'
+        cyan: '#0AA'
+        white: '#AAA'
+    bright:
+        black: '#555'
+        red: '#F55'
+        green: '#5F5'
+        yellow: '#FF5'
+        blue: '#55F'
+        magenta: '#F5F'
+        cyan: '#5FF'
+        white: '#FFF'

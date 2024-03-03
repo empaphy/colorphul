@@ -1,0 +1,16 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Binary operation \"\\-\" between float\\|int\\<0, max\\> and 0\\|10\\|15\\|20\\|25\\|30\\|35\\|40\\|45\\|50\\|55\\|60\\|65\\|70\\|75\\|80\\|85\\|90\\|95\\|100\\|105\\|110\\|115\\|120\\|125\\|'Lc' results in an error\\.$#"
+			count: 1
+			path: src/Apca.php
+
+		-
+			message: "#^Result of \\|\\| is always true\\.$#"
+			count: 1
+			path: src/Apca.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Apca.php

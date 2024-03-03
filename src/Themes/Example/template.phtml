@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<?php
+
+/**
+ * @var  \Empaphy\Colorphul\Themes\Example\ExampleThemeTemplate  $this
+ */
+
+?>
+<html lang="en">
+<head>
+    <title><?= $this->themeName ?> Example</title>
+</head>
+
+<body style="background: <?= $this->colorScheme->background->toHexRgb() ?>; color: <?= $this->colorScheme->foreground->toHexRgb() ?>">
+<table>
+    <?php foreach ($this->colorScheme as $colorName => $color): ?>
+    <tr>
+        <td><?= $colorName ?></td>
+        <td style="background-color: <?= $color->toHexRgb() ?>; "><?= $color->toHexRgb() ?></td>
+    </tr>
+    <?php endforeach; ?>
+</table>
+</body>
+
+</html>
