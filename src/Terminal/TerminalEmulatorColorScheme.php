@@ -17,5 +17,12 @@ class TerminalEmulatorColorScheme extends IntensityAwareColorScheme
         public readonly ?ColorInterface $accent = null,
     ) {
         parent::__construct($colorSets->normal, $colorSets->bright);
+
+        $this['background'] = $background;
+        $this['foreground'] = $foreground;
+
+        if (null !== $accent) {
+            $this['accent'] = $accent;
+        }
     }
 }

@@ -13,14 +13,14 @@ use matthieumastadenis\couleur\ColorInterface;
 class AnsiColorPalette extends ColorPalette implements AnsiColorPaletteInterface
 {
     public function __construct(
-        ColorInterface $black,
-        ColorInterface $red,
-        ColorInterface $green,
-        ColorInterface $yellow,
-        ColorInterface $blue,
-        ColorInterface $magenta,
-        ColorInterface $cyan,
-        ColorInterface $white
+        public ColorInterface $black,
+        public ColorInterface $red,
+        public ColorInterface $green,
+        public ColorInterface $yellow,
+        public ColorInterface $blue,
+        public ColorInterface $magenta,
+        public ColorInterface $cyan,
+        public ColorInterface $white,
     ) {
         parent::__construct([
             AnsiColorName::Black->value => $black,

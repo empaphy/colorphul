@@ -5,21 +5,63 @@
  * @var  \Empaphy\Colorphul\Themes\Example\ExampleThemeTemplate  $this
  */
 
+use matthieumastadenis\couleur\ColorInterface;
+
 ?>
 <html lang="en">
 <head>
     <title><?= $this->themeName ?> Example</title>
+    <!--suppress CssInvalidHtmlTagReference, CssUnresolvedCustomProperty -->
+    <style>
+        :root {
+<?php foreach ($this->colorScheme as $colorName => $color): /** @var ColorInterface $color */ ?>
+            --color-<?= $colorName ?>: <?= $color ?>;
+<?php endforeach; ?>
+        }
+
+<?php foreach ($this->colorScheme as $colorName => $color): ?>
+        .bg-<?= $colorName ?> { background: var(--color-<?= $colorName ?>); }
+        .fg-<?= $colorName ?> { color:      var(--color-<?= $colorName ?>); }
+<?php endforeach; ?>
+
+        body {
+            background-color: var(--color-background);
+            color:            var(--color-foreground);
+        }
+    </style>
 </head>
 
-<body style="background: <?= $this->colorScheme->background->toHexRgb() ?>; color: <?= $this->colorScheme->foreground->toHexRgb() ?>">
+<body>
 <table>
     <?php foreach ($this->colorScheme as $colorName => $color): ?>
     <tr>
         <td><?= $colorName ?></td>
-        <td style="background-color: <?= $color->toHexRgb() ?>; "><?= $color->toHexRgb() ?></td>
+        <td class="bg-<?= $colorName ?>"><?= $color->toHexRgb() ?></td>
     </tr>
     <?php endforeach; ?>
 </table>
+
+<pre class="terminal fg-foreground bg-background">
+
+<span class="fg-green"  >                    'c.          </span><span class="fg-green">alwin@Pro-McBook.local</span>
+<span class="fg-green"  >                 ,xNMM.          </span><span class="fg-white">----------------------</span>
+<span class="fg-green"  >               .OMMMMo           </span><span class="fg-yellow" >OS:</span> macOS 14.4 23E214 arm64
+<span class="fg-green"  >               OMMM0,            </span><span class="fg-yellow" >Host:</span> MacBookPro18,1
+<span class="fg-green"  >     .;loddo:' loolloddol;.      </span><span class="fg-yellow" >Kernel:</span> 23.4.0
+<span class="fg-green"  >   cKMMMMMMMMMMNWMMMMMMMMMM0:    </span><span class="fg-yellow" >Uptime:</span> 13 days, 6 hours, 38 mins
+<span class="fg-yellow" > .KMMMMMMMMMMMMMMMMMMMMMMMWd.    </span><span class="fg-yellow" >Packages:</span> 292 (brew)
+<span class="fg-yellow" > XMMMMMMMMMMMMMMMMMMMMMMMX.      </span><span class="fg-yellow" >Shell:</span> zsh 5.9
+<span class="fg-red"    >;MMMMMMMMMMMMMMMMMMMMMMMM:       </span><span class="fg-yellow" >Resolution:</span> 1728x1117
+<span class="fg-red"    >:MMMMMMMMMMMMMMMMMMMMMMMM:       </span><span class="fg-yellow" >DE:</span> Aqua
+<span class="fg-red"    >.MMMMMMMMMMMMMMMMMMMMMMMMX.      </span><span class="fg-yellow" >WM:</span> Quartz Compositor
+<span class="fg-red"    > kMMMMMMMMMMMMMMMMMMMMMMMMWd.    </span><span class="fg-yellow" >WM Theme:</span> Blue (Dark)
+<span class="fg-magenta"> .XMMMMMMMMMMMMMMMMMMMMMMMMMMk   </span><span class="fg-yellow" >Terminal:</span> WarpTerminal
+<span class="fg-magenta">  .XMMMMMMMMMMMMMMMMMMMMMMMMK.   </span><span class="fg-yellow" >CPU:</span> Apple M1 Pro
+<span class="fg-blue"   >    kMMMMMMMMMMMMMMMMMMMMMMd     </span><span class="fg-yellow" >GPU:</span> Apple M1 Pro
+<span class="fg-blue"   >     ;KMMMMMMMWXXWMMMMMMMk.      </span><span class="fg-yellow" >Memory:</span> 5085MiB / 32768MiB
+<span class="fg-blue"   >       .cooc,.    .,coo:.        </span>
+
+</pre>
 </body>
 
 </html>

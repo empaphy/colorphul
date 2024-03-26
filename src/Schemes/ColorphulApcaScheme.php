@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace Empaphy\Colorphul\Schemes;
 
+use Empaphy\Colorphul\Apca;
 use Empaphy\Colorphul\ColorSchemeAppearance;
 use Empaphy\Colorphul\ColorWheel\StandardColorWheel;
 use Empaphy\Colorphul\Terminal\AnsiColorPalette;
 use Empaphy\Colorphul\Terminal\IntensityAwareColorScheme;
 use Empaphy\Colorphul\Terminal\TerminalEmulatorColorScheme;
 use Empaphy\Colorphul\Util;
-use Empaphy\Colorphul\Wcag;
 use matthieumastadenis\couleur\ColorInterface;
+use matthieumastadenis\couleur\colors\Hsl;
 use matthieumastadenis\couleur\colors\OkLch;
 use matthieumastadenis\couleur\colors\Rgb;
+use RuntimeException;
 
-class ColorphulScheme extends TerminalEmulatorColorScheme
+class ColorphulApcaScheme extends TerminalEmulatorColorScheme
 {
-    private const CHROMA = 0.12;
+    private const CHROMA = 0.11;
 
     private const RGB_RANGE_MIN =  16;
     private const RGB_RANGE_MAX = 234;
@@ -35,11 +37,15 @@ class ColorphulScheme extends TerminalEmulatorColorScheme
         $black2 = (new Rgb(self::RGB_RANGE_MIN, self::RGB_RANGE_MIN, self::RGB_RANGE_MIN)); #101010
         $white2 = (new Rgb(self::RGB_RANGE_MAX, self::RGB_RANGE_MAX, self::RGB_RANGE_MAX)); #EAEAEA
 
-        $gray   = self::findOptimalBgLightness(new OkLch(55, 0, 0), $black2, $white2);
+        $gray   = self::findOptimalBgLightness(new OkLch(50, 0, 0), $black2, $white2);      #959595 (67 lightness) (vs #737373 W3)
 
         // Produces grays that have a specific contrast compared to a background color.
-        $black1 = Wcag::reverseDarker(7, $white2); // #4D4D4D
-        $white1 = Wcag::reverseLighter(7, $black2); //
+        $black1 = Apca::reverseAPCA( 75, Apca::sRGBtoY($white2), 'bg', 'color');        #515151
+        $white1 = Apca::reverseAPCA(-75, Apca::sRGBtoY($black2), 'bg', 'color');        #CCCCCC
+
+        if (false === $black1 || false === $white1) {
+            throw new RuntimeException('Failed to calculate optimal text colors.');
+        }
 
         $hueOffset  = Util::calculateAverageRgbToOkLchHueOffset($gray->lightness);        # 27.638934402372
         $colorWheel = new StandardColorWheel($gray->lightness, self::CHROMA, $hueOffset);
@@ -48,22 +54,22 @@ class ColorphulScheme extends TerminalEmulatorColorScheme
             colorSets: new IntensityAwareColorScheme(
                 normal: new AnsiColorPalette(
                     black:   $black3,
-                    red:     Util::clipChroma($colorWheel->red),    #db7268 oklab(67% 0.11 0.06)
-                    green:   Util::clipChroma($colorWheel->green),  # oklab(67% -0.1 0.08)
-                    yellow:  Util::clipChroma($colorWheel->yellow), #
-                    blue:    Util::clipChroma($colorWheel->azure),  // Azure simply looks nicer.
-                    magenta: Util::clipChroma($colorWheel->violet), // Violet harmonizes better with azure.
-                    cyan:    Util::clipChroma($colorWheel->cyan),
+                    red:     $colorWheel->red,    #db7268 oklab(67% 0.11 0.06)
+                    green:   $colorWheel->green,  # oklab(67% -0.1 0.08)
+                    yellow:  $colorWheel->yellow, #
+                    blue:    $colorWheel->azure,  // Azure simply looks nicer.
+                    magenta: $colorWheel->violet, // Violet harmonizes better with azure.
+                    cyan:    $colorWheel->cyan,
                     white:   $white1,
                 ),
                 bright: new AnsiColorPalette(
                     black:   $black1,
-                    red:     Util::clipChroma($colorWheel->rose),
-                    green:   Util::clipChroma($colorWheel->chartreuse),
-                    yellow:  Util::clipChroma($colorWheel->orange),
-                    blue:    Util::clipChroma($colorWheel->blue),
-                    magenta: Util::clipChroma($colorWheel->magenta),
-                    cyan:    Util::clipChroma($colorWheel->spring),
+                    red:     $colorWheel->rose,
+                    green:   $colorWheel->chartreuse,
+                    yellow:  $colorWheel->orange,
+                    blue:    $colorWheel->blue,
+                    magenta: $colorWheel->magenta,
+                    cyan:    $colorWheel->spring,
                     white:   $white3,
                 ),
             ),
@@ -74,6 +80,37 @@ class ColorphulScheme extends TerminalEmulatorColorScheme
         );
     }
 
+    /**
+     * Find the optimal lightness for a text color that is equally readable on both the darker and brighter backgrounds.
+     */
+    public static function findOptimalTextLightness(
+        ColorInterface $textColor,
+        ColorInterface $darkerBgColor,
+        ColorInterface $brighterBgColor
+    ): OkLch {
+        $textColor = $textColor->toOkLch();
+
+        // Define an initial lightness that is halfway between black and white.
+        $lightness = $darkerBgColor->toOkLch()->lightness + (
+            $brighterBgColor->toOkLch()->lightness - $darkerBgColor->toOkLch()->lightness
+        ) / 2;
+
+        $i = 0;
+
+        // Approximate the optimal lightness.
+        do {
+            $textColor = $textColor->change($lightness);
+
+            $onBlackLc = Apca::calcAPCA($textColor, $darkerBgColor);
+            $onWhiteLc = Apca::calcAPCA($textColor, $brighterBgColor);
+
+            $diff = round($onWhiteLc + $onBlackLc, 14);
+
+            $lightness += $diff / 2;
+        } while ($diff !== 0.0 && $i++ < 100);
+
+        return $textColor;
+    }
 
     /**
      * Find the lightness for a background color that makes both the brighter and darker text equally readable.
@@ -96,13 +133,13 @@ class ColorphulScheme extends TerminalEmulatorColorScheme
         do {
             $bgColor = $bgColor->change($lightness);
 
-            $onBrighterBgContrastRatio = Wcag::colorContrastRatio($darkerTextColor, $bgColor);
-            $onDarkerBgContrastRatio   = Wcag::colorContrastRatio($brighterTextColor, $bgColor);
+            $onBrighterBgLc = Apca::calcAPCA($darkerTextColor, $bgColor);
+            $onDarkerBgLc   = Apca::calcAPCA($brighterTextColor, $bgColor);
 
-            $diff = round($onDarkerBgContrastRatio - $onBrighterBgContrastRatio, 14);
+            $diff = round($onBrighterBgLc + $onDarkerBgLc, 14);
 
-            $lightness += 10 * $diff / 2;
-        } while (0.0 !== $diff && $i++ < 100);
+            $lightness -= $diff / 2;
+        } while ($diff !== 0.0 && $i++ < 100);
 
         return $bgColor;
     }

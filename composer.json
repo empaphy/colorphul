@@ -16,7 +16,8 @@
     },
     "require-dev": {
         "jetbrains/phpstorm-attributes": "^1",
-        "phpstan/phpstan": "^1"
+        "phpstan/phpstan": "^1",
+        "phpunit/phpunit": "^10"
     },
     "config": {
         "allow-plugins": {

@@ -2,43 +2,177 @@
 <html lang="en">
 <head>
     <title>Colorphul Light Example</title>
+    <!--suppress CssInvalidHtmlTagReference, CssUnresolvedCustomProperty -->
+    <style>
+        :root {
+            --color-black: rgb(0% 0% 0%);
+            --color-red: oklch(55.337604432% 0.12 25.77640474deg);
+            --color-green: oklch(55.337604432% 0.12 145.77640474deg);
+            --color-yellow: oklch(55.337604432% 0.11329834 85.77640474deg);
+            --color-blue: oklch(55.337604432% 0.118669434 235.77640474deg);
+            --color-magenta: oklch(55.337604432% 0.12 295.77640474deg);
+            --color-cyan: oklch(55.337604432% 0.094621582 205.77640474deg);
+            --color-white: oklch(69.539191579% 6.0E-9 89.875562746deg);
+            --color-brightBlack: oklch(42.112261576% 3.5E-8 89.875562398deg);
+            --color-brightRed: oklch(55.337604432% 0.12 355.77640474deg);
+            --color-brightGreen: oklch(55.337604432% 0.12 115.77640474deg);
+            --color-brightYellow: oklch(55.337604432% 0.12 55.77640474deg);
+            --color-brightBlue: oklch(55.337604432% 0.12 265.77640474deg);
+            --color-brightMagenta: oklch(55.337604432% 0.12 325.77640474deg);
+            --color-brightCyan: oklch(55.337604432% 0.103648682 175.77640474deg);
+            --color-brightWhite: rgb(100% 100% 100%);
+            --color-background: rgb(91.764705882% 91.764705882% 91.764705882%);
+            --color-foreground: oklch(42.112261576% 3.5E-8 89.875562398deg);
+            --color-accent: oklch(55.337604432% 0 0deg);
+        }
+
+        .bg-black { background: var(--color-black); }
+        .fg-black { color:      var(--color-black); }
+        .bg-red { background: var(--color-red); }
+        .fg-red { color:      var(--color-red); }
+        .bg-green { background: var(--color-green); }
+        .fg-green { color:      var(--color-green); }
+        .bg-yellow { background: var(--color-yellow); }
+        .fg-yellow { color:      var(--color-yellow); }
+        .bg-blue { background: var(--color-blue); }
+        .fg-blue { color:      var(--color-blue); }
+        .bg-magenta { background: var(--color-magenta); }
+        .fg-magenta { color:      var(--color-magenta); }
+        .bg-cyan { background: var(--color-cyan); }
+        .fg-cyan { color:      var(--color-cyan); }
+        .bg-white { background: var(--color-white); }
+        .fg-white { color:      var(--color-white); }
+        .bg-brightBlack { background: var(--color-brightBlack); }
+        .fg-brightBlack { color:      var(--color-brightBlack); }
+        .bg-brightRed { background: var(--color-brightRed); }
+        .fg-brightRed { color:      var(--color-brightRed); }
+        .bg-brightGreen { background: var(--color-brightGreen); }
+        .fg-brightGreen { color:      var(--color-brightGreen); }
+        .bg-brightYellow { background: var(--color-brightYellow); }
+        .fg-brightYellow { color:      var(--color-brightYellow); }
+        .bg-brightBlue { background: var(--color-brightBlue); }
+        .fg-brightBlue { color:      var(--color-brightBlue); }
+        .bg-brightMagenta { background: var(--color-brightMagenta); }
+        .fg-brightMagenta { color:      var(--color-brightMagenta); }
+        .bg-brightCyan { background: var(--color-brightCyan); }
+        .fg-brightCyan { color:      var(--color-brightCyan); }
+        .bg-brightWhite { background: var(--color-brightWhite); }
+        .fg-brightWhite { color:      var(--color-brightWhite); }
+        .bg-background { background: var(--color-background); }
+        .fg-background { color:      var(--color-background); }
+        .bg-foreground { background: var(--color-foreground); }
+        .fg-foreground { color:      var(--color-foreground); }
+        .bg-accent { background: var(--color-accent); }
+        .fg-accent { color:      var(--color-accent); }
+
+        body {
+            background-color: var(--color-background);
+            color:            var(--color-foreground);
+        }
+    </style>
 </head>
 
-<body style="background: #EAEAEA; color: #515151">
+<body>
 <table>
         <tr>
         <td>black</td>
-        <td style="background-color: #000; ">#000</td>
+        <td class="bg-black">#000</td>
     </tr>
         <tr>
         <td>red</td>
-        <td style="background-color: #D27B71; ">#D27B71</td>
+        <td class="bg-red">#AE534D</td>
     </tr>
         <tr>
         <td>green</td>
-        <td style="background-color: #65A96F; ">#65A96F</td>
+        <td class="bg-green">#3E8545</td>
     </tr>
         <tr>
         <td>yellow</td>
-        <td style="background-color: #B3923D; ">#B3923D</td>
+        <td class="bg-yellow">#906C00</td>
     </tr>
         <tr>
         <td>blue</td>
-        <td style="background-color: #4CA0D2; ">#4CA0D2</td>
+        <td class="bg-blue">#007CAE</td>
     </tr>
         <tr>
         <td>magenta</td>
-        <td style="background-color: #9F87D2; ">#9F87D2</td>
+        <td class="bg-magenta">#7962B0</td>
     </tr>
         <tr>
         <td>cyan</td>
-        <td style="background-color: #20A9B9; ">#20A9B9</td>
+        <td class="bg-cyan">#00828D</td>
     </tr>
         <tr>
         <td>white</td>
-        <td style="background-color: #CCC; ">#CCC</td>
+        <td class="bg-white">#9D9D9D</td>
+    </tr>
+        <tr>
+        <td>brightBlack</td>
+        <td class="bg-brightBlack">#4D4D4D</td>
+    </tr>
+        <tr>
+        <td>brightRed</td>
+        <td class="bg-brightRed">#A85275</td>
+    </tr>
+        <tr>
+        <td>brightGreen</td>
+        <td class="bg-brightGreen">#707A12</td>
+    </tr>
+        <tr>
+        <td>brightYellow</td>
+        <td class="bg-brightYellow">#A65D20</td>
+    </tr>
+        <tr>
+        <td>brightBlue</td>
+        <td class="bg-brightBlue">#516FB9</td>
+    </tr>
+        <tr>
+        <td>brightMagenta</td>
+        <td class="bg-brightMagenta">#965898</td>
+    </tr>
+        <tr>
+        <td>brightCyan</td>
+        <td class="bg-brightCyan">#008670</td>
+    </tr>
+        <tr>
+        <td>brightWhite</td>
+        <td class="bg-brightWhite">#FFF</td>
+    </tr>
+        <tr>
+        <td>background</td>
+        <td class="bg-background">#EAEAEA</td>
+    </tr>
+        <tr>
+        <td>foreground</td>
+        <td class="bg-foreground">#4D4D4D</td>
+    </tr>
+        <tr>
+        <td>accent</td>
+        <td class="bg-accent">#727272</td>
     </tr>
     </table>
+
+<pre class="terminal fg-foreground bg-background">
+
+<span class="fg-green"  >                    'c.          </span><span class="fg-green">alwin@Pro-McBook.local</span>
+<span class="fg-green"  >                 ,xNMM.          </span><span class="fg-white">----------------------</span>
+<span class="fg-green"  >               .OMMMMo           </span><span class="fg-yellow" >OS:</span> macOS 14.4 23E214 arm64
+<span class="fg-green"  >               OMMM0,            </span><span class="fg-yellow" >Host:</span> MacBookPro18,1
+<span class="fg-green"  >     .;loddo:' loolloddol;.      </span><span class="fg-yellow" >Kernel:</span> 23.4.0
+<span class="fg-green"  >   cKMMMMMMMMMMNWMMMMMMMMMM0:    </span><span class="fg-yellow" >Uptime:</span> 13 days, 6 hours, 38 mins
+<span class="fg-yellow" > .KMMMMMMMMMMMMMMMMMMMMMMMWd.    </span><span class="fg-yellow" >Packages:</span> 292 (brew)
+<span class="fg-yellow" > XMMMMMMMMMMMMMMMMMMMMMMMX.      </span><span class="fg-yellow" >Shell:</span> zsh 5.9
+<span class="fg-red"    >;MMMMMMMMMMMMMMMMMMMMMMMM:       </span><span class="fg-yellow" >Resolution:</span> 1728x1117
+<span class="fg-red"    >:MMMMMMMMMMMMMMMMMMMMMMMM:       </span><span class="fg-yellow" >DE:</span> Aqua
+<span class="fg-red"    >.MMMMMMMMMMMMMMMMMMMMMMMMX.      </span><span class="fg-yellow" >WM:</span> Quartz Compositor
+<span class="fg-red"    > kMMMMMMMMMMMMMMMMMMMMMMMMWd.    </span><span class="fg-yellow" >WM Theme:</span> Blue (Dark)
+<span class="fg-magenta"> .XMMMMMMMMMMMMMMMMMMMMMMMMMMk   </span><span class="fg-yellow" >Terminal:</span> WarpTerminal
+<span class="fg-magenta">  .XMMMMMMMMMMMMMMMMMMMMMMMMK.   </span><span class="fg-yellow" >CPU:</span> Apple M1 Pro
+<span class="fg-blue"   >    kMMMMMMMMMMMMMMMMMMMMMMd     </span><span class="fg-yellow" >GPU:</span> Apple M1 Pro
+<span class="fg-blue"   >     ;KMMMMMMMWXXWMMMMMMMk.      </span><span class="fg-yellow" >Memory:</span> 5085MiB / 32768MiB
+<span class="fg-blue"   >       .cooc,.    .,coo:.        </span>
+
+</pre>
 </body>
 
 </html>
