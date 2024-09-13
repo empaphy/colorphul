@@ -17,6 +17,7 @@ use matthieumastadenis\couleur\ColorInterface;
  * @property ColorInterface $cyan
  * @property ColorInterface $white
  *
- * @template-extends ColorPaletteInterface<value-of<AnsiColorName>>
+ * @template TColor of ColorInterface
+ * @extends ColorPaletteInterface<value-of<AnsiColorName>, TColor>
  */
 interface AnsiColorPaletteInterface extends ColorPaletteInterface {}
