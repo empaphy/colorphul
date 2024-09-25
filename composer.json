@@ -30,7 +30,10 @@
     "autoload": {
         "psr-4": {
             "Empaphy\\Colorphul\\": "src/"
-        }
+        },
+        "files": [
+            "src/utils/apca.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
