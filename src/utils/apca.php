@@ -119,6 +119,16 @@ function sc(float $cY): float
  * On why this function omits the piecewise logic (`Csrgb ≤ 0.04045`) from the
  * sRGB OETF:
  *
+ * > Technically, the input modules do not convert to a traditional calculated
+ * > CIEXYZ luminance, and it is not intended to. They calculate a unique value
+ * > "estimated screen luminance" denoted Ys. The first stage is a conversion to
+ * > model of typical monitors in typical environmental settings. Included is
+ * > consideration of surveys and case studies of monitors in real-world
+ * > environments, and our own measurements and studies of various devices and
+ * > displays.
+ * >
+ * > [...]
+ * >
  * > The {@see sc() pre-processing stage} also includes a soft clamp at black
  * > for initial monitor modeling. As an interesting side note, the need for the
  * > soft clamp makes using the piecewise redundant, as that section near black
