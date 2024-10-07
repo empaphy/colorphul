@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Empaphy\Colorphul\Tests\utils;
 
 use Empaphy\Colorphul\Contrast\Apca;
+use Empaphy\Colorphul\Contrast\ContrastPolarity;
 use matthieumastadenis\couleur\colors\Rgb;
 use PHPUnit\Framework\TestCase;
 use function Empaphy\Colorphul\utils\apca\cL;
@@ -20,15 +21,20 @@ class ApcaTest extends TestCase
 {
     public function test_lightness_contrast(): void
     {
-        $this->assertEquals(0, lightness_contrast(new Rgb(0, 0, 0), new Rgb(0, 0, 0)));
-        $this->assertEquals(0, lightness_contrast(new Rgb(0, 0, 0), new Rgb(0, 0, 0)));
-        $this->assertEquals(0, lightness_contrast(new Rgb(0, 0, 0), new Rgb(0, 0, 0)));
-        $this->assertEquals(Apca::MAX_NORMAL, lightness_contrast(new Rgb(0, 0, 0), new Rgb(255, 255, 255)));
-        $this->assertEquals(Apca::MAX_REVERSE, lightness_contrast(new Rgb(255, 255, 255), new Rgb(0, 0, 0)));
-        $this->assertEquals(0, lightness_contrast(new Rgb(0, 0, 0), new Rgb(57, 57, 57)));
-        $this->assertEquals(0, lightness_contrast(new Rgb(60, 60, 60), new Rgb(0, 0, 0)));
-        $this->assertGreaterThan(0, lightness_contrast(new Rgb(0, 0, 0), new Rgb(58, 58, 58)));
-        $this->assertLessThan(0, lightness_contrast(new Rgb(61, 61, 61), new Rgb(0, 0, 0)));
+        $black = new Rgb(0, 0, 0);
+        $white = new Rgb(255, 255, 255);
+
+        $this->assertEquals(Apca::max(ContrastPolarity::Normal), lightness_contrast($black, $white));
+        $this->assertEquals(Apca::max(ContrastPolarity::Reverse), lightness_contrast($white, $black));
+
+        $this->assertEquals(0, lightness_contrast($black, new $black));
+        $this->assertEquals(0, lightness_contrast($white, $white));
+
+        $this->assertEquals(0, lightness_contrast($black, new Rgb(57, 57, 57)));
+        $this->assertGreaterThan(0, lightness_contrast($black, new Rgb(58, 58, 58)));
+
+        $this->assertEquals(0, lightness_contrast(new Rgb(60, 60, 60), $black));
+        $this->assertLessThan(0, lightness_contrast(new Rgb(61, 61, 61), $black));
     }
 
     public function test_cL(): void
