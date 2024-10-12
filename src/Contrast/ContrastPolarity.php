@@ -19,14 +19,19 @@ enum ContrastPolarity: int
     public static function for(float $contrast): self
     {
         return match ($contrast <=> 0) {
-            1 => self::LightOnDark,
+            1 => self::Normal,
             0 => self::None,
-            -1 => self::DarkOnLight,
+            -1 => self::Reverse,
         };
+    }
+
+    public function isNormal(): bool
+    {
+        return self::Normal === $this;
     }
 
     public function isReverse(): bool
     {
-        return $this === self::Reverse;
+        return self::Reverse === $this;
     }
 }
