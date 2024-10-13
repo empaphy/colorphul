@@ -6,12 +6,12 @@ namespace Empaphy\Colorphul\Terminal;
 
 enum AnsiColorName: string
 {
-    case Black   = 'black';
-    case Red     = 'red';
-    case Green   = 'green';
-    case Yellow  = 'yellow';
-    case Blue    = 'blue';
-    case Magenta = 'magenta';
-    case Cyan    = 'cyan';
-    case White   = 'white';
+    case Black   = AnsiColorNames::BLACK;
+    case Red     = AnsiColorNames::RED;
+    case Green   = AnsiColorNames::GREEN;
+    case Yellow  = AnsiColorNames::YELLOW;
+    case Blue    = AnsiColorNames::BLUE;
+    case Magenta = AnsiColorNames::MAGENTA;
+    case Cyan    = AnsiColorNames::CYAN;
+    case White   = AnsiColorNames::WHITE;
 }

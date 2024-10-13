@@ -8,10 +8,11 @@ use Empaphy\Colorphul\ColorScheme;
 use matthieumastadenis\couleur\ColorInterface;
 
 /**
+ * @template TIndex of value-of<AnsiColorName>
  * @template TColor of ColorInterface
  *
- * @extends ColorScheme<value-of<AnsiColorName>, TColor>
- * @implements AnsiColorSchemeInterface<TColor>
+ * @extends ColorScheme<TIndex, TColor>
+ * @implements AnsiColorSchemeInterface<TIndex, TColor>
  */
 class AnsiColorScheme extends ColorScheme implements AnsiColorSchemeInterface
 {

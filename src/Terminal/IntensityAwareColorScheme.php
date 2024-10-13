@@ -4,13 +4,23 @@ declare(strict_types=1);
 
 namespace Empaphy\Colorphul\Terminal;
 
+use Empaphy\Colorphul\ColorScheme;
 use matthieumastadenis\couleur\ColorInterface;
+
 
 /**
  * A color scheme that supports different intensities for each color.
  *
  * @template TColor of ColorInterface
- * @template TColorPalette of AnsiColorSchemeInterface<TColor>
+ *
+ * @property ColorInterface $black
+ * @property ColorInterface $red
+ * @property ColorInterface $green
+ * @property ColorInterface $yellow
+ * @property ColorInterface $blue
+ * @property ColorInterface $magenta
+ * @property ColorInterface $cyan
+ * @property ColorInterface $white
  *
  * @property ColorInterface $black_bright
  * @property ColorInterface $red_bright
@@ -30,16 +40,17 @@ use matthieumastadenis\couleur\ColorInterface;
  * @property ColorInterface $cyan_dim
  * @property ColorInterface $white_dim
  *
- * @extends AnsiColorScheme<TColor>
+ * @extends ColorScheme<value-of<IntensityAwareColorName>, TColor>
+ * @implements AnsiColorSchemeInterface<value-of<IntensityAwareColorName>, TColor>
+ * @implements IntensityAwareColorSchemeInterface<value-of<IntensityAwareColorName>, TColor>
  */
-class IntensityAwareColorScheme extends AnsiColorScheme
+class IntensityAwareColorScheme extends ColorScheme implements AnsiColorSchemeInterface, IntensityAwareColorSchemeInterface
 {
     /**
-     * @param  TColorPalette       $normal
-     * @param  TColorPalette       $bright
-     * @param  TColorPalette|null  $dim
+     * @param  AnsiColorSchemeInterface<value-of<AnsiColorName>, TColor>       $normal
+     * @param  AnsiColorSchemeInterface<value-of<AnsiColorName>, TColor>       $bright
+     * @param  AnsiColorSchemeInterface<value-of<AnsiColorName>, TColor>|null  $dim
      *
-     * @noinspection PhpDocSignatureInspection
      * @noinspection UnknownInspectionInspection
      */
     public function __construct(
@@ -47,14 +58,16 @@ class IntensityAwareColorScheme extends AnsiColorScheme
         public readonly AnsiColorSchemeInterface $bright,
         public readonly ?AnsiColorSchemeInterface $dim = null,
     ) {
-        parent::__construct(...$normal);
+        parent::__construct([...$normal]);
 
         foreach ($bright as $name => $color) {
-            $this["{$name}_bright"] = $color;
+            $this["{$name}_" . ColorIntensity::Bright->value] = $color;
         }
 
-        foreach ($dim ?? [] as $name => $color) {
-            $this["${name}_dim"] = $color;
+        if (null !== $dim) {
+            foreach ($dim as $name => $color) {
+                $this["${name}_" . ColorIntensity::Dim->value] = $color;
+            }
         }
     }
 }
