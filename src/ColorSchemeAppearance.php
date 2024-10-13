@@ -8,4 +8,5 @@ enum ColorSchemeAppearance
 {
     case Dark;
     case Light;
+    case Neutral;
 }
