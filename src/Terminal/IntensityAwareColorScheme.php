@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Empaphy\Colorphul\Terminal;
 
-use Empaphy\Colorphul\ColorPalette;
 use matthieumastadenis\couleur\ColorInterface;
 
 /**
  * A color scheme that supports different intensities for each color.
+ *
+ * @template TColor of ColorInterface
+ * @template TColorPalette of AnsiColorSchemeInterface<TColor>
  *
  * @property ColorInterface $black_bright
  * @property ColorInterface $red_bright
@@ -28,10 +30,9 @@ use matthieumastadenis\couleur\ColorInterface;
  * @property ColorInterface $cyan_dim
  * @property ColorInterface $white_dim
  *
- * @template TColorPalette of AnsiColorPaletteInterface
- * @extends ColorPalette<string, ColorInterface>
+ * @extends AnsiColorScheme<TColor>
  */
-class IntensityAwareColorScheme extends ColorPalette
+class IntensityAwareColorScheme extends AnsiColorScheme
 {
     /**
      * @param  TColorPalette       $normal
@@ -42,11 +43,11 @@ class IntensityAwareColorScheme extends ColorPalette
      * @noinspection UnknownInspectionInspection
      */
     public function __construct(
-        public readonly AnsiColorPaletteInterface $normal,
-        public readonly AnsiColorPaletteInterface $bright,
-        public readonly ?AnsiColorPaletteInterface $dim = null,
+        public readonly AnsiColorSchemeInterface $normal,
+        public readonly AnsiColorSchemeInterface $bright,
+        public readonly ?AnsiColorSchemeInterface $dim = null,
     ) {
-        parent::__construct([...$normal]);
+        parent::__construct(...$normal);
 
         foreach ($bright as $name => $color) {
             $this["{$name}_bright"] = $color;

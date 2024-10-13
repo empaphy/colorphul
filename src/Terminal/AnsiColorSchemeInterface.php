@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Empaphy\Colorphul\Terminal;
 
-use Empaphy\Colorphul\ColorPaletteInterface;
+use Empaphy\Colorphul\ColorSchemeInterface;
 use matthieumastadenis\couleur\ColorInterface;
 
 /**
+ * @template TColor of ColorInterface
+ *
  * @property ColorInterface $black
  * @property ColorInterface $red
  * @property ColorInterface $green
@@ -17,7 +19,8 @@ use matthieumastadenis\couleur\ColorInterface;
  * @property ColorInterface $cyan
  * @property ColorInterface $white
  *
- * @template TColor of ColorInterface
- * @extends ColorPaletteInterface<value-of<AnsiColorName>, TColor>
+ * @extends ColorSchemeInterface<value-of<AnsiColorName>, TColor>
+ *
+ * @phpstan-require-extends AnsiColorScheme
  */
-interface AnsiColorPaletteInterface extends ColorPaletteInterface {}
+interface AnsiColorSchemeInterface extends ColorSchemeInterface {}
