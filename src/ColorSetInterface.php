@@ -18,4 +18,4 @@ use Traversable;
  * @template-extends Traversable<TIndex, TColor>
  * @template-extends ArrayAccess<TIndex, TColor>
  */
-interface ColorSchemeInterface extends Traversable, ArrayAccess, Countable {}
+interface ColorSetInterface extends Traversable, ArrayAccess, Countable {}

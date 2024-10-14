@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @noinspection PhpMultipleClassDeclarationsInspection
+ */
+
 declare(strict_types=1);
 
 namespace Empaphy\Colorphul;
@@ -8,15 +12,15 @@ use ArrayObject;
 use matthieumastadenis\couleur\ColorInterface;
 
 /**
- * A color scheme is a set of available colors referenced by index.
+ * A set of colors referenced by index.
  *
  * @template TIndex of string
  * @template TColor of ColorInterface
  *
  * @extends ArrayObject<TIndex, TColor>
- * @implements ColorSchemeInterface<TIndex, TColor>
+ * @implements ColorSetInterface<TIndex, TColor>
  */
-abstract class ColorScheme extends ArrayObject implements ColorSchemeInterface
+abstract class ColorSet extends ArrayObject implements ColorSetInterface
 {
     /**
      * @param  iterable<TIndex, TColor>  $colors
